@@ -119,6 +119,8 @@ def addMovie():
             _directorLastName1 = request.form['inputDirectorLastName1']
             _directorFirstName2 = request.form['inputDirectorFirstName2']
             _directorLastName2 = request.form['inputDirectorLastName2']
+            _actorFirstName1 = request.form['inputActorFirstName1']
+            _actorLastName1 = request.form['inputActorLastName1']
 
             conn = mysql.connect()
             cursor = conn.cursor()
@@ -175,7 +177,7 @@ def addMovie():
                     data = cursor.fetchall()
                     if len(data) is 0:
                         conn.commit()
-                        return redirect('/userHome')
+                        #return redirect('/userHome')
                     else:
                         return render_template('error.html',error = 'An error occurred!')
 

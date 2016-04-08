@@ -1,7 +1,7 @@
 
 --database
 
-drop movieapp;
+drop database movieapp;
 create database movieapp;
 
 --User table
@@ -135,7 +135,7 @@ BEGIN
         p_genrename
     );
 END$$
- 
+
 DELIMITER ;
 ;
 
@@ -149,7 +149,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addDirector`(
     IN p_birthplace varchar(100)
 )
 BEGIN
-    IF (SELECT count(*) FROM Director 
+    IF (SELECT count(*) FROM Director
 	WHERE FirstName = p_firstname AND LastName = p_lastname
 	) > 0 THEN
     insert into Director (
@@ -167,21 +167,49 @@ BEGIN
     );
      END IF;
 END$$
- 
+
 DELIMITER ;
 ;
 
---Add Actor
-DROP procedure IF EXISTS `sp_addActor`;
+--Add directorName
+DROP procedure IF EXISTS `sp_addDirectorName`;
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addActor`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addDirectorName`(
     IN p_firstname varchar(10),
-    IN p_lastname varchar(10),
-    IN p_nationality VARCHAR(10),
-    IN p_birthplace varchar(100)
+    IN p_lastname varchar(10)
 )
 BEGIN
-    IF (SELECT count(*) FROM Actor 
+    IF (SELECT count(*) FROM Director
+	WHERE FirstName = p_firstname AND LastName = p_lastname
+	) > 0 THEN
+    insert into Director (
+        FirstName,
+	LastName,
+	Nationality,
+	BirthPlace
+    )
+    values
+    (
+        p_firstname,
+    	p_lastname,
+        null,
+        null
+    );
+     END IF;
+END$$
+
+DELIMITER ;
+;
+
+--Add Actor Name
+DROP procedure IF EXISTS `sp_addActorName`;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addActorName`(
+    IN p_firstname varchar(10),
+    IN p_lastname varchar(10)
+)
+BEGIN
+    IF (SELECT count(*) FROM Actor
 	WHERE FirstName = p_firstname AND LastName = p_lastname
 	) > 0 THEN
     insert into Actor (
@@ -194,12 +222,12 @@ BEGIN
     (
         p_firstname,
     	p_lastname,
-        p_nationality,
-        p_birthplace
+        null,
+        null
     );
      END IF;
 END$$
- 
+
 DELIMITER ;
 ;
 
@@ -211,7 +239,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addMovieActor`(
     IN p_movieid int
 )
 BEGIN
-    
+
     insert into MovieActor (
         ActorID,
 	MovieID
@@ -222,7 +250,7 @@ BEGIN
     	p_movieid
     );
 END$$
- 
+
 DELIMITER ;
 ;
 
@@ -234,7 +262,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addDirectedBy`(
     IN p_movieid int
 )
 BEGIN
-    
+
     insert into DirectedBy (
         DirectorID,
 	MovieID
@@ -245,8 +273,6 @@ BEGIN
     	p_movieid
     );
 END$$
- 
+
 DELIMITER ;
 ;
-
-
