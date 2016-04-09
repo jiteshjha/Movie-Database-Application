@@ -123,6 +123,12 @@ def addMovie():
             _actorLastName1 = request.form['inputActorLastName1']
             _actorFirstName2 = request.form['inputActorFirstName2']
             _actorLastName2 = request.form['inputActorLastName2']
+            _actorFirstName3 = request.form['inputActorFirstName3']
+            _actorLastName3 = request.form['inputActorLastName3']
+            _actorFirstName4 = request.form['inputActorFirstName4']
+            _actorLastName4 = request.form['inputActorLastName4']
+            _actorFirstName5 = request.form['inputActorFirstName5']
+            _actorLastName5 = request.form['inputActorLastName5']
 
             conn = mysql.connect()
             cursor = conn.cursor()
@@ -202,6 +208,60 @@ def addMovie():
                 conn.commit()
                 #return redirect('/userHome')
                 cursor.execute("SELECT ActorID FROM Actor WHERE FirstName = %s AND LastName = %s", (_actorFirstName2,_actorLastName2,))
+                data = cursor.fetchone()
+                ActorID = data[0]
+                cursor.callproc('sp_addMovieActor',(ActorID,MovieID))
+                data = cursor.fetchall()
+                if len(data) is 0:
+                    conn.commit()
+                    #return redirect('/userHome')
+                else:
+                    return render_template('error.html',error = 'An error occurred!')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+
+            cursor.callproc('sp_addActorName',(_actorFirstName3,_actorLastName3))
+            data = cursor.fetchall()
+            if len(data) is 0:
+                conn.commit()
+                #return redirect('/userHome')
+                cursor.execute("SELECT ActorID FROM Actor WHERE FirstName = %s AND LastName = %s", (_actorFirstName3,_actorLastName3,))
+                data = cursor.fetchone()
+                ActorID = data[0]
+                cursor.callproc('sp_addMovieActor',(ActorID,MovieID))
+                data = cursor.fetchall()
+                if len(data) is 0:
+                    conn.commit()
+                    #return redirect('/userHome')
+                else:
+                    return render_template('error.html',error = 'An error occurred!')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+
+            cursor.callproc('sp_addActorName',(_actorFirstName4,_actorLastName4))
+            data = cursor.fetchall()
+            if len(data) is 0:
+                conn.commit()
+                #return redirect('/userHome')
+                cursor.execute("SELECT ActorID FROM Actor WHERE FirstName = %s AND LastName = %s", (_actorFirstName4,_actorLastName4,))
+                data = cursor.fetchone()
+                ActorID = data[0]
+                cursor.callproc('sp_addMovieActor',(ActorID,MovieID))
+                data = cursor.fetchall()
+                if len(data) is 0:
+                    conn.commit()
+                    #return redirect('/userHome')
+                else:
+                    return render_template('error.html',error = 'An error occurred!')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+
+            cursor.callproc('sp_addActorName',(_actorFirstName5,_actorLastName5))
+            data = cursor.fetchall()
+            if len(data) is 0:
+                conn.commit()
+                #return redirect('/userHome')
+                cursor.execute("SELECT ActorID FROM Actor WHERE FirstName = %s AND LastName = %s", (_actorFirstName5,_actorLastName5,))
                 data = cursor.fetchone()
                 ActorID = data[0]
                 cursor.callproc('sp_addMovieActor',(ActorID,MovieID))
