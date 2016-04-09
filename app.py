@@ -1,7 +1,8 @@
-
+import os
 from flask import Flask, render_template, json, request, redirect, session
 from flask.ext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
+from jinja2 import Environment, FileSystemLoader
 
 app = Flask(__name__)
 app.secret_key = 'ssh...Big secret!'
@@ -14,6 +15,11 @@ app.config['MYSQL_DATABASE_PASSWORD'] = 'remo161196'
 app.config['MYSQL_DATABASE_DB'] = 'movieapp'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
+
+# Define the template directory
+tpldir = os.path.dirname(os.path.abspath(__file__))+'/templates/'
+# Setup the template enviroment
+env = Environment(loader=FileSystemLoader(tpldir), trim_blocks=True)
 
 # route to index.html
 @app.route("/")
@@ -92,7 +98,32 @@ def validateLogin():
 @app.route('/userHome')
 def userHome():
     if session.get('user'):
-        return render_template('userHome.html')
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.execute("SELECT * FROM Movie ORDER BY MovieID DESC");
+        data = cursor.fetchall()
+
+        data_dict = []
+        for i in data:
+            data_dic = {
+                    'MovieID': i[0],
+                    'Title': i[1],
+                    'ReleaseYear': i[2],
+                    'Rating': i[3],
+                    'Synopsis': i[4],
+                    'MovieLength': i[5],
+                    'GenreName': i[6]}
+
+            data_dict.append(data_dic)
+
+        #return json.dumps(data_dict)
+        # generate template and assign variables
+        output = env.get_template('userHome.html').render(
+            loopdata = data_dict
+        )
+
+        # return the output
+        return output
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
