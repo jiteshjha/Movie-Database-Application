@@ -213,7 +213,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addActor`(
 BEGIN
     IF (SELECT count(*) FROM Actor
 	WHERE FirstName = p_firstname AND LastName = p_lastname
-	) > 0 THEN
+) <= 0 THEN
     insert into Actor (
         FirstName,
 	LastName,
@@ -226,6 +226,36 @@ BEGIN
     	p_lastname,
         p_nationality,
         p_birthplace
+    );
+     END IF;
+END$$
+
+DELIMITER ;
+;
+
+--Add actor name
+DROP procedure IF EXISTS `sp_addActorName`;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addActorName`(
+    IN p_firstname varchar(10),
+    IN p_lastname varchar(10)
+)
+BEGIN
+    IF (SELECT count(*) FROM Actor
+	WHERE FirstName = p_firstname AND LastName = p_lastname
+) <= 0 THEN
+    insert into Actor (
+        FirstName,
+	LastName,
+	Nationality,
+	BirthPlace
+    )
+    values
+    (
+        p_firstname,
+    	p_lastname,
+        null,
+        null
     );
      END IF;
 END$$
