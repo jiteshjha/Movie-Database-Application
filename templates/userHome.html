@@ -29,7 +29,7 @@
         <div class="header">
             <nav>
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="/showAddMovie">Add Movie</a></li>
+                    <li role="presentation"><a href="{{ url_for('showAddMovie') }}">Add Movie</a></li>
                     <li role="presentation" class="active"><a href="/logout">Logout</a>
                     </li>
                 </ul>
@@ -42,7 +42,8 @@
 
         {% for x in loopdata %}
         <div class="list-group">
-        <a href="#" class="list-group-item active">
+
+        <a href="{{ url_for('movie', movie_name=x['Title']) }}" class="list-group-item active">
             <h4 class="list-group-item-heading text-center">{{x['Title']}}</h4>
             <div class="row">
                 <div class="col-sm-4"><p class="list-group-item-text text-center">Rating : {{x['Rating']}}/10</p></div>

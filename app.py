@@ -16,10 +16,6 @@ app.config['MYSQL_DATABASE_DB'] = 'movieapp'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
-# Define the template directory
-tpldir = os.path.dirname(os.path.abspath(__file__))+'/templates/'
-# Setup the template enviroment
-env = Environment(loader=FileSystemLoader(tpldir), trim_blocks=True)
 
 # route to index.html
 @app.route("/")
@@ -118,9 +114,8 @@ def userHome():
 
         #return json.dumps(data_dict)
         # generate template and assign variables
-        output = env.get_template('userHome.html').render(
-            loopdata = data_dict
-        )
+        loopdata = data_dict
+        return render_template('userHome.html', loopdata=loopdata)
 
         # return the output
         return output
@@ -128,7 +123,7 @@ def userHome():
         return render_template('error.html',error = 'Unauthorized Access')
 
 @app.route('/showAddMovie')
-def showAddWish():
+def showAddMovie():
     return render_template('addMovie.html')
 
 @app.route('/logout')
@@ -325,38 +320,13 @@ def addMovie():
         cursor.close()
         conn.close()
 
-@app.route('/getMovie')
-def getWish():
-    try:
-        if session.get('user'):
-            _user = session.get('user')
 
-            con = mysql.connect()
-            cursor = con.cursor()
-            cursor.execute("SELECT * FROM Movie ORDER BY MovieID DESC");
-            data = cursor.fetchall()
-
-            data_dict = []
-            for i in data:
-                data_dic = {
-                        'MovieID': i[0],
-                        'Title': i[1],
-                        'ReleaseYear': i[2],
-                        'Rating': i[3],
-                        'Synopsis': i[4],
-                        'MovieLength': i[5],
-                        'GenreName': i[6]}
-
-                data_dict.append(data_dic)
-
-            return json.dumps(data_dict)
-        else:
-            return render_template('error.html', error = 'Unauthorized Access')
-    except Exception as e:
-        return render_template('error.html', error = str(e))
-
-
+@app.route('/movie/<movie_name>/')
+def movie(movie_name):
+    # do something with folder_name
+    return render_template('error.html',error = movie_name)
 
 
 if __name__ == "__main__":
+    app.debug = True
     app.run()
