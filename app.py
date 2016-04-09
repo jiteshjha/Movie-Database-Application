@@ -305,16 +305,20 @@ def getWish():
             cursor.execute("SELECT * FROM Movie ORDER BY MovieID DESC");
             data = cursor.fetchall()
 
-            wishes_dict = []
-            for wish in wishes:
-                wish_dict = {
-                        'Id': wish[0],
-                        'Title': wish[1],
-                        'Description': wish[2],
-                        'Date': wish[4]}
-                wishes_dict.append(wish_dict)
+            data_dict = []
+            for i in data:
+                data_dic = {
+                        'MovieID': i[0],
+                        'Title': i[1],
+                        'ReleaseYear': i[2],
+                        'Rating': i[3],
+                        'Synopsis': i[4],
+                        'MovieLength': i[5],
+                        'GenreName': i[6]}
 
-            return json.dumps(wishes_dict)
+                data_dict.append(data_dic)
+
+            return json.dumps(data_dict)
         else:
             return render_template('error.html', error = 'Unauthorized Access')
     except Exception as e:
