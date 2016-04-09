@@ -1,7 +1,7 @@
 
 --database
 
-drop movieapp;
+drop database movieapp;
 create database movieapp;
 
 --User table

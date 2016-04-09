@@ -1,4 +1,4 @@
-//JQuery AJAX call to signUp function in app,py 
+//JQuery AJAX call to signUp function in app,py
 
 $(function() {
     $('#btnSignUp').click(function() {
@@ -8,7 +8,7 @@ $(function() {
             data: $('form').serialize(),
             type: 'POST',
             success: function(response) {
-                console.log(response);
+                 window.location.href = '/showSignin';
             },
             error: function(error) {
                 console.log(error);
