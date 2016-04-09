@@ -323,9 +323,27 @@ def addMovie():
 
 @app.route('/movie/<movie_name>/')
 def movie(movie_name):
-    # do something with folder_name
-    return render_template('error.html',error = movie_name)
+    if session.get('user'):
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM Movie WHERE Title = %s", (movie_name,))
+        data = cursor.fetchone()
+        data_dict = []
+        data_dict = {
+            'MovieID': data[0],
+            'Title': data[1],
+            'ReleaseYear': data[2],
+            'Rating': data[3],
+            'Synopsis': data[4],
+            'MovieLength': data[5],
+            'GenreName': data[6]
+        }
 
+        #cursor.execute("SELECT * FROM DirectedBy, Movie WHERE Title = %s", (movie_name,))
+
+        return render_template('movieDetail.html', movieData = data_dict)
+    else:
+        return render_template('error.html',error = 'Unauthorized Access')
 
 if __name__ == "__main__":
     app.debug = True
