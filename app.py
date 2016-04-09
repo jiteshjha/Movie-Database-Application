@@ -121,6 +121,8 @@ def addMovie():
             _directorLastName2 = request.form['inputDirectorLastName2']
             _actorFirstName1 = request.form['inputActorFirstName1']
             _actorLastName1 = request.form['inputActorLastName1']
+            _actorFirstName2 = request.form['inputActorFirstName2']
+            _actorLastName2 = request.form['inputActorLastName2']
 
             conn = mysql.connect()
             cursor = conn.cursor()
@@ -182,6 +184,24 @@ def addMovie():
                 conn.commit()
                 #return redirect('/userHome')
                 cursor.execute("SELECT ActorID FROM Actor WHERE FirstName = %s AND LastName = %s", (_actorFirstName1,_actorLastName1,))
+                data = cursor.fetchone()
+                ActorID = data[0]
+                cursor.callproc('sp_addMovieActor',(ActorID,MovieID))
+                data = cursor.fetchall()
+                if len(data) is 0:
+                    conn.commit()
+                    #return redirect('/userHome')
+                else:
+                    return render_template('error.html',error = 'An error occurred!')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+
+            cursor.callproc('sp_addActorName',(_actorFirstName2,_actorLastName2))
+            data = cursor.fetchall()
+            if len(data) is 0:
+                conn.commit()
+                #return redirect('/userHome')
+                cursor.execute("SELECT ActorID FROM Actor WHERE FirstName = %s AND LastName = %s", (_actorFirstName2,_actorLastName2,))
                 data = cursor.fetchone()
                 ActorID = data[0]
                 cursor.callproc('sp_addMovieActor',(ActorID,MovieID))
