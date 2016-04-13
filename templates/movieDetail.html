@@ -35,11 +35,37 @@
             <div class="col-sm-4"><h4 class="list-group-item-heading text-center">Release Year : {{movieData['ReleaseYear']}}</h4></div>
         </div>
         <div class="row">
+            <br />
             <h4 class="list-group-item-heading text-center">Synopsis :</h4>
             <div><p class="list-group-item-text text-center">{{movieData['Synopsis']}}</p></div>
         </div>
         </div>
         </div>
+        <h2 class="list-group-item-heading text-center">Directed By:</h2>
+        <br />
+        {% for x in director_name %}
+        <div class="list-group">
+        <div class="list-group-item active">
+        <div class="row">
+            <div class="col-sm-4"><h4 class="text-left">Director {{loop.index}} :</h4></div>
+            <div class="col-sm-4"><h4>{{x[0]}} {{x[1]}}</h4></div>
+        </div>
+        </div>
+        </div>
+        {% endfor %}
+
+        <h2 class="list-group-item-heading text-center">Cast:</h2>
+        <br />
+        {% for x in actor_name %}
+        <div class="list-group">
+        <div class="list-group-item active">
+        <div class="row">
+            <div class="col-sm-4"><h4 class="text-left">Actor/Actress {{loop.index}} :</h4></div>
+            <div class="col-sm-4"><h4>{{x[0]}} {{x[1]}}</h4></div>
+        </div>
+        </div>
+        </div>
+        {% endfor %}
       </div>
 
 

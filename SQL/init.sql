@@ -308,3 +308,9 @@ END$$
 
 DELIMITER ;
 ;
+
+-- Get Director associated with a movie;
+SELECT firstname, lastname FROM Movie NATURAL JOIN DirectedBy, Director WHERE Director.DirectorID = DirectedBy.DirectorID and MovieID = 48;
+
+-- Get Actor associated with a movie.
+ SELECT firstname, lastname FROM Movie NATURAL JOIN MovieActor, Actor WHERE Actor.ActorID = MovieActor.ActorID and MovieID = 51;

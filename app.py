@@ -339,9 +339,13 @@ def movie(movie_name):
             'GenreName': data[6]
         }
 
-        #cursor.execute("SELECT * FROM DirectedBy, Movie WHERE Title = %s", (movie_name,))
+        MovieID = data[0]
+        cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN DirectedBy, Director WHERE Director.DirectorID = DirectedBy.DirectorID and MovieID = %s",  (MovieID,))
+        director_data = cursor.fetchall()
+        cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN MovieActor, Actor WHERE Actor.ActorID = MovieActor.ActorID and MovieID = %s",  (MovieID,))
+        actor_data = cursor.fetchall()
 
-        return render_template('movieDetail.html', movieData = data_dict)
+        return render_template('movieDetail.html', movieData = data_dict, director_name=director_data, actor_name=actor_data)
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
