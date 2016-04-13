@@ -349,6 +349,10 @@ def movie(movie_name):
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
+@app.route('/searchMovie')
+def searchMovie():
+    return render_template('error.html',error = 'Fuck!')
+
 if __name__ == "__main__":
     app.debug = True
     app.run()
