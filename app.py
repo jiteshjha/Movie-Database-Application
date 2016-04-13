@@ -349,9 +349,40 @@ def movie(movie_name):
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
-@app.route('/searchMovie')
+@app.route('/userHome', methods=['POST'])
 def searchMovie():
-    return render_template('error.html',error = 'Fuck!')
+    if session.get('user'):
+        #return render_template('error.html',error = request.form['searchText'])
+        con = mysql.connect()
+        cursor = con.cursor()
+        text = request.form['searchText']
+        text = '%' + text + '%'
+        cursor.execute("SELECT * FROM Movie WHERE Title LIKE %s ORDER BY MovieID DESC",(text,));
+        data = cursor.fetchall()
+
+        data_dict = []
+        for i in data:
+            data_dic = {
+                    'MovieID': i[0],
+                    'Title': i[1],
+                    'ReleaseYear': i[2],
+                    'Rating': i[3],
+                    'Synopsis': i[4],
+                    'MovieLength': i[5],
+                    'GenreName': i[6]}
+
+            data_dict.append(data_dic)
+
+        #return json.dumps(data_dict)
+        # generate template and assign variables
+        loopdata = data_dict
+        return render_template('userHome.html', loopdata=loopdata)
+
+        # return the output
+        return output
+    else:
+        return render_template('error.html',error = 'Unauthorized Access')
+
 
 if __name__ == "__main__":
     app.debug = True
