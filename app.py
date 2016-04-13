@@ -382,8 +382,7 @@ def searchMovie():
         return output
     else:
         return render_template('error.html',error = 'Unauthorized Access')
-
-
+        
 if __name__ == "__main__":
     app.debug = True
     app.run()

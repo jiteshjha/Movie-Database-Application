@@ -56,16 +56,27 @@
 
         <h2 class="list-group-item-heading text-center">Cast:</h2>
         <br />
-        {% for x in actor_name %}
-        <div class="list-group">
-        <div class="list-group-item active">
-        <div class="row">
-            <div class="col-sm-4"><h4 class="text-left">Actor/Actress {{loop.index}} :</h4></div>
-            <div class="col-sm-4"><h4>{{x[0]}} {{x[1]}}</h4></div>
-        </div>
-        </div>
-        </div>
-        {% endfor %}
+
+        {% if actor_name|length > 0 %}
+            {% for x in actor_name %}
+                <div class="list-group">
+                <div class="list-group-item active">
+                <div class="row">
+                    <div class="col-sm-4"><h4 class="text-left">Actor/Actress {{loop.index}} :</h4></div>
+                    <div class="col-sm-4"><h4>{{x[0]}} {{x[1]}}</h4></div>
+                </div>
+                </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="list-group">
+            <div class="list-group-item active">
+            <div class="row">
+                <div class="col-sm-4"><h4 class="text-left">No Actor/Actress</h4></div>
+            </div>
+            </div>
+            </div>
+        {%endif %}
       </div>
 
 
