@@ -314,3 +314,45 @@ SELECT firstname, lastname FROM Movie NATURAL JOIN DirectedBy, Director WHERE Di
 
 -- Get Actor associated with a movie.
  SELECT firstname, lastname FROM Movie NATURAL JOIN MovieActor, Actor WHERE Actor.ActorID = MovieActor.ActorID and MovieID = 51;
+
+ -- Review table
+
+CREATE TABLE Review (
+    ReviewID INT AUTO_INCREMENT PRIMARY KEY,
+    MovieID INT,
+    UserID BIGINT,
+    Review VARCHAR(100),
+    ReviewDate DATE,
+    FOREIGN KEY(MovieID) REFERENCES Movie(MovieID)
+    ON DELETE CASCADE,
+    FOREIGN KEY(UserID) REFERENCES User(UserID)
+    ON DELETE CASCADE
+)ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- Add Review
+DROP procedure IF EXISTS `sp_addReview`;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addReview`(
+    IN p_movieid int,
+    IN p_userid bigint,
+    IN p_review varchar(100)
+)
+BEGIN
+
+    insert into Review (
+        MovieID,
+        UserID,
+        Review,
+        ReviewDate
+    )
+    values
+    (
+    	p_movieid,
+        p_userid,
+        p_review,
+        NOW()
+    );
+END$$
+
+DELIMITER ;
+;

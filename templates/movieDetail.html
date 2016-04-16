@@ -77,7 +77,62 @@
             </div>
             </div>
         {%endif %}
+        <h2 class="list-group-item-heading text-center">Reviews:</h2>
+        <br />
+
+        {% if review_data|length > 0 %}
+            {% for x in review_data %}
+                <div class="list-group">
+                <div class="list-group-item active">
+                <div class="row">
+                    <div class="col-sm-4"><h4 class="text-left">{{loop.index}} :</h4></div>
+                    <div class="col-sm-4"><h4>{{x[0]}}</h4></div>
+                    <div class="col-sm-4"><h4>Date: {{x[1]}}</h4></div>
+                    <div class="col-sm-4"><h4>By: {{x[2]}}</h4></div>
+                </div>
+                </div>
+                </div>
+            {% endfor %}
+        {%endif %}
+        {% if my_review_data|length <= 0 and  review_data|length <= 0%}
+            <div class="list-group">
+            <div class="list-group-item active" style="background-color:#e53935">
+            <div class="row">
+                <div class="col-sm-12"><h4>No Reviews yet, be the first one to review!</h4></div>
+            </div>
+            </div>
+            </div>
+        {%endif %}
+        {% if my_review_data|length > 0 %}
+            <h3 class="list-group-item-heading text-center">Your Reviews:</h3>
+            <br />
+            {% for x in my_review_data %}
+                <div class="list-group">
+                <div class="list-group-item active">
+                <div class="row">
+                    <div class="col-sm-4"><h4 class="text-left">{{loop.index}} :</h4></div>
+                    <div class="col-sm-4"><h4>{{x[0]}}</h4></div>
+                    <div class="col-sm-4"><h4>Date: {{x[1]}}</h4></div>
+                </div>
+                </div>
+                </div>
+            {% endfor %}
+        {%endif %}
+
+        <div class="row">
+            <form method="post" action="{{ url_for('review', movie_name=movieData['Title']) }}">
+                <div class="col-lg-10 col-lg-offset-1">
+                  <div class="input-group">
+                    <textarea class="form-control" id="txtPost" name="inputReview" placeholder="Add a review..."  maxlength="100" required="true"></textarea>
+                    <span class="input-group-btn">
+                     <button class="btn btn-default" type="submit">Add</button>
+                    </span>
+                  </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </form>
+        </div>
       </div>
+
 
 
 

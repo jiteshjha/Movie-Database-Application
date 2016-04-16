@@ -338,14 +338,18 @@ def movie(movie_name):
             'MovieLength': data[5],
             'GenreName': data[6]
         }
-
         MovieID = data[0]
+        UserID = session.get('user')
         cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN DirectedBy, Director WHERE Director.DirectorID = DirectedBy.DirectorID and MovieID = %s",  (MovieID,))
         director_data = cursor.fetchall()
         cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN MovieActor, Actor WHERE Actor.ActorID = MovieActor.ActorID and MovieID = %s",  (MovieID,))
         actor_data = cursor.fetchall()
+        cursor.execute("SELECT Review, ReviewDate, UserName FROM Review NATURAL JOIN User WHERE MovieID = %s AND UserID <> %s ORDER BY ReviewID DESC",  (MovieID, UserID,))
+        review_data = cursor.fetchall()
+        cursor.execute("SELECT Review, ReviewDate, UserName FROM Review NATURAL JOIN User WHERE MovieID = %s AND UserID = %s ORDER BY ReviewID DESC",  (MovieID, UserID,))
+        my_review_data = cursor.fetchall()
+        return render_template('movieDetail.html', movieData = data_dict, director_name=director_data, actor_name=actor_data, review_data = review_data, my_review_data=my_review_data)
 
-        return render_template('movieDetail.html', movieData = data_dict, director_name=director_data, actor_name=actor_data)
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
@@ -382,7 +386,53 @@ def searchMovie():
         return output
     else:
         return render_template('error.html',error = 'Unauthorized Access')
-        
+
+@app.route('/movie/<movie_name>/', methods=['POST'])
+def review(movie_name):
+    if session.get('user'):
+        review_text = request.form['inputReview']
+        UserID = session.get('user')
+
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM Movie WHERE Title = %s", (movie_name,))
+        data = cursor.fetchone()
+        MovieID = data[0]
+
+        if review_text != '':
+            cursor.callproc('sp_addReview',(MovieID, UserID, review_text))
+            data = cursor.fetchall()
+            if len(data) is 0:
+                conn.commit()
+                cursor.execute("SELECT * FROM Movie WHERE Title = %s", (movie_name,))
+                data = cursor.fetchone()
+                data_dict = []
+                data_dict = {
+                    'MovieID': data[0],
+                    'Title': data[1],
+                    'ReleaseYear': data[2],
+                    'Rating': data[3],
+                    'Synopsis': data[4],
+                    'MovieLength': data[5],
+                    'GenreName': data[6]
+                }
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+
+        UserID = session.get('user')
+        cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN DirectedBy, Director WHERE Director.DirectorID = DirectedBy.DirectorID and MovieID = %s",  (MovieID,))
+        director_data = cursor.fetchall()
+        cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN MovieActor, Actor WHERE Actor.ActorID = MovieActor.ActorID and MovieID = %s",  (MovieID,))
+        actor_data = cursor.fetchall()
+        cursor.execute("SELECT Review, ReviewDate, UserName FROM Review NATURAL JOIN User WHERE MovieID = %s AND UserID <> %s ORDER BY ReviewID DESC",  (MovieID, UserID,))
+        review_data = cursor.fetchall()
+        cursor.execute("SELECT Review, ReviewDate, UserName FROM Review NATURAL JOIN User WHERE MovieID = %s AND UserID = %s ORDER BY ReviewID DESC",  (MovieID, UserID,))
+        my_review_data = cursor.fetchall()
+        return render_template('movieDetail.html', movieData = data_dict, director_name=director_data, actor_name=actor_data, review_data = review_data, my_review_data=my_review_data)
+
+    else:
+        return render_template('error.html',error = 'Unauthorized Access')
+
 if __name__ == "__main__":
     app.debug = True
     app.run()
