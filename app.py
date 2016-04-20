@@ -101,13 +101,17 @@ def userHome():
 
         data_dict = []
         for i in data:
+            cursor.execute("SELECT TRUNCATE(avg(Rating), 1) FROM Review WHERE MovieID = %s", (i[0],))
+            rating = cursor.fetchone()[0]
             data_dic = {
                     'MovieID': i[0],
                     'Title': i[1],
                     'ReleaseYear': i[2],
                     'Synopsis': i[3],
                     'MovieLength': i[4],
-                    'GenreName': i[5]}
+                    'GenreName': i[5],
+                    'Rating' : rating
+                    }
 
             data_dict.append(data_dic)
 
@@ -327,6 +331,9 @@ def movie(movie_name):
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM Movie WHERE Title = %s", (movie_name,))
         data = cursor.fetchone()
+        MovieID = data[0]
+        cursor.execute("SELECT TRUNCATE(avg(Rating), 1) FROM Review WHERE MovieID = %s", (MovieID,))
+        rating = cursor.fetchone()[0]
         data_dict = []
         data_dict = {
             'MovieID': data[0],
@@ -334,9 +341,10 @@ def movie(movie_name):
             'ReleaseYear': data[2],
             'Synopsis': data[3],
             'MovieLength': data[4],
-            'GenreName': data[5]
+            'GenreName': data[5],
+            'Rating' : rating
         }
-        MovieID = data[0]
+
         UserID = session.get('user')
         cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN DirectedBy, Director WHERE Director.DirectorID = DirectedBy.DirectorID and MovieID = %s",  (MovieID,))
         director_data = cursor.fetchall()
@@ -364,13 +372,17 @@ def searchMovie():
 
         data_dict = []
         for i in data:
+            cursor.execute("SELECT TRUNCATE(avg(Rating), 1) FROM Review WHERE MovieID = %s", (i[0],))
+            rating = cursor.fetchone()[0]
+
             data_dic = {
                     'MovieID': i[0],
                     'Title': i[1],
                     'ReleaseYear': i[2],
                     'Synopsis': i[3],
                     'MovieLength': i[4],
-                    'GenreName': i[5]
+                    'GenreName': i[5],
+                    'Rating' :rating
             }
 
             data_dict.append(data_dic)
@@ -389,6 +401,7 @@ def searchMovie():
 def review(movie_name):
     if session.get('user'):
         review_text = request.form['inputReview']
+        rating_text = request.form['inputRating']
         UserID = session.get('user')
 
         conn = mysql.connect()
@@ -398,10 +411,14 @@ def review(movie_name):
         MovieID = data[0]
 
         if review_text != '':
-            cursor.callproc('sp_addReview',(MovieID, UserID, review_text))
+            cursor.callproc('sp_addReview',(MovieID, UserID, review_text, rating_text))
             data = cursor.fetchall()
             if len(data) is 0:
                 conn.commit()
+
+                cursor.execute("SELECT TRUNCATE(avg(Rating), 1) FROM Review WHERE MovieID = %s", (MovieID,))
+                rating = cursor.fetchone()[0]
+                print rating
                 cursor.execute("SELECT * FROM Movie WHERE Title = %s", (movie_name,))
                 data = cursor.fetchone()
                 data_dict = []
@@ -411,7 +428,8 @@ def review(movie_name):
                     'ReleaseYear': data[2],
                     'Synopsis': data[3],
                     'MovieLength': data[4],
-                    'GenreName': data[5]
+                    'GenreName': data[5],
+                    'Rating' : rating
                 }
             else:
                 return render_template('error.html',error = 'An error occurred!')

@@ -321,6 +321,7 @@ CREATE TABLE Review (
     MovieID INT,
     UserID BIGINT,
     Review VARCHAR(100),
+    Rating NUMERIC(2,1),
     ReviewDate DATE,
     FOREIGN KEY(MovieID) REFERENCES Movie(MovieID)
     ON DELETE CASCADE,
@@ -334,7 +335,8 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addReview`(
     IN p_movieid int,
     IN p_userid bigint,
-    IN p_review varchar(100)
+    IN p_review varchar(100),
+    IN p_rating numeric(2,1)
 )
 BEGIN
 
@@ -342,6 +344,7 @@ BEGIN
         MovieID,
         UserID,
         Review,
+        Rating,
         ReviewDate
     )
     values
@@ -349,6 +352,7 @@ BEGIN
     	p_movieid,
         p_userid,
         p_review,
+        p_rating,
         NOW()
     );
 END$$
