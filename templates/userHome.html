@@ -27,6 +27,8 @@
             <nav>
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation"><a href="{{ url_for('showAddMovie') }}">Add Movie</a></li>
+                    <li role="presentation"><a href="{{ url_for('showAddDirector') }}">Add New Director</a></li>
+                    <li role="presentation"><a href="{{ url_for('showAddActor') }}">Add New Actor</a></li>
                     <li role="presentation" class="active"><a href="/logout">Logout</a>
                     </li>
                 </ul>
@@ -63,9 +65,9 @@
                 <h4 class="list-group-item-heading text-center">{{x['Title']}}</h4>
                 <div class="row">
                     {% if x['Rating'] %}
-                        <div class="col-sm-4"><h4 class="list-group-item-heading text-center">Rating : {{x['Rating']}}/10</h4></div>
+                        <div class="col-sm-4"><p class="list-group-item-text text-center">Rating : {{x['Rating']}}/10</p></div>
                     {% else %}
-                        <div class="col-sm-4"><h4 class="list-group-item-heading text-center">Rating : Not rated yet</h4></div>
+                        <div class="col-sm-4"><p class="list-group-item-text text-center">Rating : Not rated yet</p></div>
                     {% endif %}
                     <div class="col-sm-4"><p class="list-group-item-text text-center">Genre : {{x['GenreName']}}</p></div>
                     <div class="col-sm-4"><p class="list-group-item-text text-center">Release Year : {{x['ReleaseYear']}}</p></div>

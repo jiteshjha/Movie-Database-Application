@@ -107,9 +107,9 @@ def userHome():
                     'MovieID': i[0],
                     'Title': i[1],
                     'ReleaseYear': i[2],
-                    'Synopsis': i[3],
-                    'MovieLength': i[4],
-                    'GenreName': i[5],
+                    'MovieLength': i[3],
+                    'GenreName': i[4],
+                    'Synopsis': i[5],
                     'Rating' : rating
                     }
 
@@ -160,7 +160,7 @@ def addMovie():
 
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('sp_addMovie',(_title,_releaseYear,_synopsis,_movieLength,_genre))
+            cursor.callproc('sp_addMovie',(_title,_releaseYear,_movieLength,_genre,_synopsis))
             data = cursor.fetchall()
 
             if len(data) is 0:
@@ -310,10 +310,6 @@ def addMovie():
 
             return redirect('/userHome')
             #return render_template('error.html',error = str(MovieID))
-
-
-
-
         else:
             return render_template('error.html',error = 'Unauthorized Access')
     except Exception as e:
@@ -338,16 +334,16 @@ def movie(movie_name):
             'MovieID': data[0],
             'Title': data[1],
             'ReleaseYear': data[2],
-            'Synopsis': data[3],
-            'MovieLength': data[4],
-            'GenreName': data[5],
+            'MovieLength': data[3],
+            'GenreName': data[4],
+            'Synopsis': data[5],
             'Rating' : rating
         }
 
         UserID = session.get('user')
-        cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN DirectedBy, Director WHERE Director.DirectorID = DirectedBy.DirectorID and MovieID = %s",  (MovieID,))
+        cursor.execute("SELECT firstname, lastname, Director.DirectorID FROM Movie NATURAL JOIN DirectedBy, Director WHERE Director.DirectorID = DirectedBy.DirectorID and MovieID = %s",  (MovieID,))
         director_data = cursor.fetchall()
-        cursor.execute("SELECT firstname, lastname FROM Movie NATURAL JOIN MovieActor, Actor WHERE Actor.ActorID = MovieActor.ActorID and MovieID = %s",  (MovieID,))
+        cursor.execute("SELECT firstname, lastname, Actor.ActorID FROM Movie NATURAL JOIN MovieActor, Actor WHERE Actor.ActorID = MovieActor.ActorID and MovieID = %s",  (MovieID,))
         actor_data = cursor.fetchall()
         cursor.execute("SELECT Review, ReviewDate, UserName FROM Review NATURAL JOIN User WHERE MovieID = %s AND UserID <> %s ORDER BY ReviewID DESC",  (MovieID, UserID,))
         review_data = cursor.fetchall()
@@ -392,10 +388,10 @@ def searchMovie():
                     'MovieID': i[0],
                     'Title': i[1],
                     'ReleaseYear': i[2],
-                    'Synopsis': i[3],
-                    'MovieLength': i[4],
-                    'GenreName': i[5],
-                    'Rating' :rating
+                    'MovieLength': i[3],
+                    'GenreName': i[4],
+                    'Synopsis': i[5],
+                    'Rating' : rating
             }
 
             data_dict.append(data_dic)
@@ -439,9 +435,9 @@ def review(movie_name):
                     'MovieID': data[0],
                     'Title': data[1],
                     'ReleaseYear': data[2],
-                    'Synopsis': data[3],
-                    'MovieLength': data[4],
-                    'GenreName': data[5],
+                    'MovieLength': data[3],
+                    'GenreName': data[4],
+                    'Synopsis': data[5],
                     'Rating' : rating
                 }
             else:
@@ -460,6 +456,79 @@ def review(movie_name):
 
     else:
         return render_template('error.html',error = 'Unauthorized Access')
+
+@app.route('/showAddDirector')
+def showAddDirector():
+    return render_template('addDirector.html')
+
+@app.route('/showAddActor')
+def showAddActor():
+    return render_template('addActor.html')
+
+@app.route('/addDirector', methods=['POST'])
+def addDirector():
+    _inputNationality = request.form['inputNationality']
+    _inputBirthPlace = request.form['inputBirthPlace']
+    _inputDirectorFirstName = request.form['inputDirectorFirstName']
+    _inputDirectorLastName = request.form['inputDirectorLastName']
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.callproc('sp_addDirector',(_inputDirectorFirstName,_inputDirectorLastName,_inputNationality,_inputBirthPlace))
+    data = cursor.fetchall()
+    if len(data) is 0:
+        conn.commit()
+        return redirect('/userHome')
+    else:
+        return render_template('error.html',error = 'An error occurred!')
+
+@app.route('/addActor', methods=['POST'])
+def addActor():
+    _inputNationality = request.form['inputNationality']
+    _inputBirthPlace = request.form['inputBirthPlace']
+    _inputActorFirstName = request.form['inputActorFirstName']
+    _inputActorLastName = request.form['inputActorLastName']
+
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.callproc('sp_addActor',(_inputActorFirstName,_inputActorLastName,_inputNationality,_inputBirthPlace))
+    data = cursor.fetchall()
+    if len(data) is 0:
+        conn.commit()
+        return redirect('/userHome')
+    else:
+        return render_template('error.html',error = 'An error occurred!')
+
+@app.route('/actor/<actorid>/')
+def actor(actorid):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Actor WHERE ActorID = %s",  (actorid,))
+    data = cursor.fetchone()
+    data_dict = []
+    data_dict = {
+        'firstname': data[1],
+        'lastname': data[2],
+        'nationality': data[3],
+        'birthplace': data[4]
+    }
+    return render_template('actorDetail.html',data = data_dict)
+
+@app.route('/director/<directorid>/')
+def director(directorid):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Director WHERE DirectorID = %s",  (directorid,))
+    data = cursor.fetchone()
+    data_dict = []
+    data_dict = {
+        'firstname': data[1],
+        'lastname': data[2],
+        'nationality': data[3],
+        'birthplace': data[4]
+    }
+    return render_template('directorDetail.html',data = data_dict)
+
 
 if __name__ == "__main__":
     app.debug = True

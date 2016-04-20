@@ -37,7 +37,7 @@
         <div class="row">
             <br />
             <h4 class="list-group-item-heading text-center">Synopsis :</h4>
-            <div><p class="list-group-item-text text-center">{{movieData['Synopsis']}}</p></div>
+            <div style="word-wrap: break-word"><p class="list-group-item-text text-center">{{movieData['Synopsis']}}</p></div>
         </div>
         </div>
         </div>
@@ -47,8 +47,10 @@
         <div class="list-group">
         <div class="list-group-item active">
         <div class="row">
+            <a href="{{ url_for('director', directorid=x[2]) }}" style="color:white">
             <div class="col-sm-4"><h4 class="text-left">Director {{loop.index}} :</h4></div>
             <div class="col-sm-4"><h4>{{x[0]}} {{x[1]}}</h4></div>
+            </a>
         </div>
         </div>
         </div>
@@ -62,8 +64,10 @@
                 <div class="list-group">
                 <div class="list-group-item active">
                 <div class="row">
+                    <a href="{{ url_for('actor', actorid=x[2]) }}" style="color:white">
                     <div class="col-sm-4"><h4 class="text-left">Actor/Actress {{loop.index}} :</h4></div>
                     <div class="col-sm-4"><h4>{{x[0]}} {{x[1]}}</h4></div>
+                    </a>
                 </div>
                 </div>
                 </div>
