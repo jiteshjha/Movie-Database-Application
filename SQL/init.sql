@@ -105,12 +105,11 @@ CREATE TABLE DirectedBy (
 );
 
 --Add movie
-
+DROP procedure IF EXISTS `sp_addMovie`;
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addMovie`(
+CREATE PROCEDURE `sp_addMovie`(
     IN p_title varchar(20),
     IN p_releaseyear INT,
-    IN p_rating NUMERIC(1,1),
     IN p_synopsis varchar(100),
     IN p_movielength VARCHAR(5),
     IN p_genrename VARCHAR(10)
@@ -119,7 +118,6 @@ BEGIN
     insert into Movie (
         Title,
         ReleaseYear,
-        Rating,
 	Synopsis,
 	MovieLength,
 	GenreName
@@ -128,7 +126,6 @@ BEGIN
     (
         p_title,
     	p_releaseyear,
-        p_rating,
         p_synopsis,
         p_movielength,
         p_genrename
