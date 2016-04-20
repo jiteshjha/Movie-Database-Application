@@ -51,16 +51,17 @@
         <h1 class="text-center" style="margin-bottom:3pc">Movies</h1>
         {% if loopdata|length > 0 %}
             {% for x in loopdata %}
+            <div class="col-sm-4">
             <div class="list-group">
 
             <a href="{{ url_for('movie', movie_name=x['Title']) }}" class="list-group-item active">
                 <h4 class="list-group-item-heading text-center">{{x['Title']}}</h4>
                 <div class="row">
-                    <div class="col-sm-4"><p class="list-group-item-text text-center">Rating : {{x['Rating']}}/10</p></div>
-                    <div class="col-sm-4"><p class="list-group-item-text text-center">Genre : {{x['GenreName']}}</p></div>
-                    <div class="col-sm-4"><p class="list-group-item-text text-center">Release Year : {{x['ReleaseYear']}}</p></div>
+                    <div class="col-sm-6"><p class="list-group-item-text text-center">Genre : {{x['GenreName']}}</p></div>
+                    <div class="col-sm-6"><p class="list-group-item-text text-center">Release Year : {{x['ReleaseYear']}}</p></div>
                 </div>
             </a>
+            </div>
             </div>
             {% endfor %}
         {% else %}
