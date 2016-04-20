@@ -105,10 +105,9 @@ def userHome():
                     'MovieID': i[0],
                     'Title': i[1],
                     'ReleaseYear': i[2],
-                    'Rating': i[3],
-                    'Synopsis': i[4],
-                    'MovieLength': i[5],
-                    'GenreName': i[6]}
+                    'Synopsis': i[3],
+                    'MovieLength': i[4],
+                    'GenreName': i[5]}
 
             data_dict.append(data_dic)
 
@@ -333,10 +332,9 @@ def movie(movie_name):
             'MovieID': data[0],
             'Title': data[1],
             'ReleaseYear': data[2],
-            'Rating': data[3],
-            'Synopsis': data[4],
-            'MovieLength': data[5],
-            'GenreName': data[6]
+            'Synopsis': data[3],
+            'MovieLength': data[4],
+            'GenreName': data[5]
         }
         MovieID = data[0]
         UserID = session.get('user')
@@ -370,10 +368,10 @@ def searchMovie():
                     'MovieID': i[0],
                     'Title': i[1],
                     'ReleaseYear': i[2],
-                    'Rating': i[3],
-                    'Synopsis': i[4],
-                    'MovieLength': i[5],
-                    'GenreName': i[6]}
+                    'Synopsis': i[3],
+                    'MovieLength': i[4],
+                    'GenreName': i[5]
+            }
 
             data_dict.append(data_dic)
 
@@ -411,10 +409,9 @@ def review(movie_name):
                     'MovieID': data[0],
                     'Title': data[1],
                     'ReleaseYear': data[2],
-                    'Rating': data[3],
-                    'Synopsis': data[4],
-                    'MovieLength': data[5],
-                    'GenreName': data[6]
+                    'Synopsis': data[3],
+                    'MovieLength': data[4],
+                    'GenreName': data[5]
                 }
             else:
                 return render_template('error.html',error = 'An error occurred!')

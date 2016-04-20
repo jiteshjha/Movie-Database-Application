@@ -66,7 +66,6 @@ CREATE TABLE Movie (
 	MovieID INT AUTO_INCREMENT,
 	Title VARCHAR(20) NOT NULL,
 	ReleaseYear INT,
-	Rating NUMERIC(1, 1),
 	Synopsis VARCHAR(100),
 	MovieLength VARCHAR(5),
 	GenreName VARCHAR(10),
