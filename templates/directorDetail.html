@@ -26,10 +26,18 @@
       <h4 class="text-left">Details:</h4>
         <div class="list-group">
         <div class="list-group-item active">
-        <div class="row">
-                <div class="col-sm-12"><h4 class="list-group-item-heading text-center">Nationality : {{data['nationality']}}</h4></div>
-                <div class="col-sm-12"><h4 class="list-group-item-heading text-center">BirthPlace : {{data['birthplace']}}</h4></div>
-        </div>
+            {% if data['nationality'] %}
+                <div class="row">
+                        <div class="col-sm-12"><h4 class="list-group-item-heading text-center">Nationality : {{data['nationality']}}</h4></div>
+                        <div class="col-sm-12"><h4 class="list-group-item-heading text-center">BirthPlace : {{data['birthplace']}}</h4></div>
+                </div>
+            {% else %}
+            <div class="row">
+                    <div class="col-sm-12"><h4 class="list-group-item-heading text-center">No nationality and birthplace details added yet.</h4></div>
+                    <div class="col-sm-12"><h4 class="list-group-item-heading text-center">Add details?</h4></div>
+                    <a href="{{ url_for('showAddDirector') }}"><h4 class="list-group-item-heading text-center" style="color:white">Click here!</h4></a></li>
+            </div>
+            {% endif %}
         </div>
         </div>
 
