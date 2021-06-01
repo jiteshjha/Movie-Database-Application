@@ -47,7 +47,7 @@ system-service==0.1.6
 Twisted-Core==14.0.2
 Twisted-Web==14.0.2
 unity-lens-photos==1.0
-urllib3==1.9.1
+urllib3==1.26.5
 vboxapi==1.0
 Werkzeug==0.11.4
 WTForms==2.1
